@@ -1,0 +1,16 @@
+{
+    "contents" : "\n# This is the user-interface definition of a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\n\npoints=6000\n\nshinyUI(fluidPage(\n\n  # Application title\n  titlePanel(\"Spirograph for Max and Nathan\"),\n  \n  #Sidebar with a slider input for number of bins\n  sidebarLayout(\n    sidebarPanel(\n      sliderInput(\"ring1\",\n                  \"Unit Size of Stationary Ring:\",\n                  min = 1,\n                  max = 120,\n                  value = 100),\n      sliderInput(\"ring2\",\n                  \"Unit Size of Rotating Ring:\",\n                  min = -100,\n                  max = 120,\n                  value = 10),\n      sliderInput(\"penLoc\",\n                  \"Pen relative to radius of ring 2:\",\n                  min = 1,\n                  max = 50,\n                  value = 20),\n\n\n      checkboxInput(\"showRings\",\"Show Rings?\",TRUE),\n      sliderInput(\"point\",\"Number of points drawn\",min=2,max=points,value=2,step=5,\n                  animate=animationOptions(interval=points/30))\n      \n    ),\n\n    # Show a plot of the generated distribution\n    mainPanel(\n      plotOutput(\"distPlot\",width=\"400px\",height=\"400px\")\n    )\n  )\n))\n",
+    "created" : 1422465905210.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1334191607",
+    "id" : "147EC6D4",
+    "lastKnownWriteTime" : 1423260762,
+    "path" : "~/R/ShinySpiro/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
