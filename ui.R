@@ -12,7 +12,7 @@ points=6000
 shinyUI(fluidPage(
 
   # Application title
-  titlePanel("Spirograph for Max and Nathan"),
+  titlePanel("Cyclic Trochoids (aka Spirograph™)"),
   
   #Sidebar with a slider input for number of bins
   sidebarLayout(
