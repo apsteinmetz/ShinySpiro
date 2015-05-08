@@ -95,42 +95,44 @@ compute_CTrochoid<-function(radius1=100,radius2=20, penLoc=5) {
     # rotating ring goes outside stationary ring
     figureType ='Epitrochoid'
     if (radius1==radius2)  figureType="Epicycloid (stationary Ring=Rotating Ring)"
-    if (penLoc==radius2)  figureType="Limaçon (Pen Size = Rotating Ring)"      
-    if (penLoc==0)  figureType="Circle (Pen Size = 0)"      
-    dat<-epiTrochoid(radius1,radius2,penLoc,defaultTheta)
+    if (penLoc==radius2)  figureType="Limaçon (Pen Length = Rotating Ring)"      
+    if (penLoc==0)  figureType="Circle (Pen Length = 0)"      
+    points<-epiTrochoid(radius1,radius2,penLoc,defaultTheta)
   }
   else {
     # rotating ring goes inside stationary ring
     figureType = 'Hypotrochoid'
-    if (radius1==radius2)  figureType="Ellipse (stationary Ring = 2 * Rotating Ring)"
-    if (penLoc==radius2)  figureType="Hypocycloid (Pen Size = Rotating Ring)"      
+    if (radius1==-2*radius2)  figureType="Ellipse (stationary Ring = 2 * Rotating Ring)"
+    if (penLoc==-radius2)  figureType="Hypocycloid (Pen Size = Rotating Ring)"      
+    points<-hypoTrochoid(radius1,radius2,penLoc,defaultTheta)
     
-    dat<-hypoTrochoid(radius1,radius2,penLoc,defaultTheta)
   } 
   
   
-  return (dat)
+  return (list(points=points,figureType=figureType))
 } 
+
 #-------------------------------------------------------------------------------------------
-ggplotcTrochoidFast<-function(dat,radius1,radius2,point=defaultPoints,
+ggplotcTrochoid<-function(dat,radius1,radius2,point=defaultPoints,
                               overlay=TRUE,penColor="black",zoom=FALSE) {
   
 
   # zoom might clip ring visibility but make figure fill plot area
   if (zoom)
-    maxRange= max(abs(dat))
+    maxRange= max(abs(dat$points))
   else
-    maxRange=max(abs(dat))*1.3
+    maxRange=max(abs(dat$points))*1.3
   
   plotRange=c(-maxRange,maxRange)
   
-  t.plot<-ggplot(data=dat[1:point,],aes(x=x,y=y))+geom_path(color=penColor)+xlim(plotRange)+ylim(plotRange)
+  t.plot<-ggplot(data=dat$points[1:point,],aes(x=x,y=y))
+  t.plot<-t.plot+geom_path(color=penColor)+xlim(plotRange)+ylim(plotRange)+ggtitle(dat$figureType)
   #plot rotating ring and 'pen' for last point
   if (overlay) t.plot <- ggoverlayCircles(t.plot,radius1,radius2,
-                                          px =dat[point,]$x,
-                                          py =dat[point,]$y,
-                                          cx =dat[point,]$cx,
-                                          cy =dat[point,]$cy,
+                                          px =dat$points[point,]$x,
+                                          py =dat$points[point,]$y,
+                                          cx =dat$points[point,]$cx,
+                                          cy =dat$points[point,]$cy,
                                           penColor)
   print(t.plot)
 } 
@@ -158,7 +160,7 @@ trochoidPoints <- reactive({    compute_CTrochoid(radius1=input$ring1,
 
 output$distPlot <- renderPlot({
  
-    ggplotcTrochoidFast(trochoidPoints(),
+    ggplotcTrochoid(trochoidPoints(),
                     radius1=input$ring1,
                     radius2=input$ring2,
                     point=input$point,
@@ -166,15 +168,5 @@ output$distPlot <- renderPlot({
                     penColor=input$penColor,
                     zoom=input$zoom)
   })
-# output$distPlot <- renderPlot({
-#  
-#     ggplotcTrochoidSlow(radius1=input$ring1,
-#                     radius2=input$ring2,
-#                     point=input$point,
-#                     penLoc=input$penLoc,
-#                     overlay=input$showRings,
-#                     penColor=input$penColor,
-#                     zoom=input$zoom)
-#   })
 
 })
