@@ -139,10 +139,12 @@ ggplotcTrochoid<-function(dat,radius1,radius2,point=defaultPoints,
 # --------------------------------------------------------------------------  
 # precompute all points of trochoid and center of rotating ring.
 # Don't recompute unless these inputs change
-trochoidPoints <- reactive({    compute_CTrochoid(radius1=input$ring1,
-                                                  radius2=input$ring2,
-                                                  penLoc=input$penLoc
-                                                  )  
+trochoidPoints <- reactive({    
+
+  compute_CTrochoid(radius1=input$ring1,
+                    radius2=input$ring2,
+                    penLoc=input$penLoc
+                    )  
 })
 
 
@@ -159,8 +161,8 @@ trochoidPoints <- reactive({    compute_CTrochoid(radius1=input$ring1,
 
 
 output$distPlot <- renderPlot({
- 
-    ggplotcTrochoid(trochoidPoints(),
+    points<-trochoidPoints()
+    ggplotcTrochoid(points,
                     radius1=input$ring1,
                     radius2=input$ring2,
                     point=input$point,

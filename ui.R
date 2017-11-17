@@ -65,7 +65,7 @@ shinyUI(fluidPage(
 
     # Show a plot of the generated distribution
     mainPanel(
-      textOutput("speed"),
+      #textOutput("speed"),
       plotOutput("distPlot",width="400px",height="400px")
     )
   )
