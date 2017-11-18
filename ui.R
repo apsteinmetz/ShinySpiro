@@ -42,7 +42,7 @@ shinyUI(fluidPage(
       checkboxInput("zoom","Zoom? (won't always make a difference)",FALSE),
 
       sliderInput("point","Number of points drawn",min=2,max=points,value=2,step=5,
-                  animate=animationOptions(interval=points/60))
+                  animate=animationOptions(interval=points/60*2))
       
 #       selectInput("speed", "Animation Speed", c("slow", "medium", "fast")),
 #       
@@ -66,7 +66,8 @@ shinyUI(fluidPage(
     # Show a plot of the generated distribution
     mainPanel(
       #textOutput("speed"),
-      plotOutput("distPlot",width="400px",height="400px")
+      plotOutput("distPlot",width="400px",height="400px"),
+      h5("A toy for my sons.")
     )
   )
 ))

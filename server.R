@@ -1,14 +1,11 @@
 
-# This is the server logic for a Shiny web application.
-# You can find out more about building applications with Shiny here:
-#
-# http://shiny.rstudio.com
-#
 # Spirograph
 # author: Art Steinmetz
 
 library(shiny)
 library(grid)
+
+
 
 shinyServer(function(input, output) {
   
@@ -170,6 +167,7 @@ ggplotcTrochoid_B<-function(dat,radius1,radius2,point=defaultPoints,
   plotRange=c(-maxRange,maxRange)
   
   t.plot<-ggplot(data=dat$points[1:point,],aes(x=x,y=y))
+  #plot the points
   t.plot<-t.plot+geom_path(color=penColor)+xlim(plotRange)+ylim(plotRange)+ggtitle(dat$figureType)
   #plot rotating ring and 'pen' for last point
   if (overlay) t.plot <- ggoverlayCircles(t.plot,radius1,radius2,
@@ -178,19 +176,30 @@ ggplotcTrochoid_B<-function(dat,radius1,radius2,point=defaultPoints,
                                           cx =dat$points[point,]$cx,
                                           cy =dat$points[point,]$cy,
                                           penColor)
-  print(t.plot)
+  return(t.plot)
 } 
 # --------------------------------------------------------------------------  
 # precompute all points of trochoid and center of rotating ring.
 # Don't recompute unless these inputs change
-trochoidPoints <- reactive({    
+  trochoidPoints <- reactive({
 
-  compute_CTrochoid(radius1=input$ring1,
-                    radius2=input$ring2,
-                    penLoc=input$penLoc
-                    )  
-})
-
+    compute_CTrochoid(radius1=input$ring1,
+                      radius2=input$ring2,
+                      penLoc=input$penLoc
+    )
+  })
+  update_plot <- reactive({
+    ggplotcTrochoid_A(
+                      radius1=input$ring1,
+                      radius2=input$ring2,
+                      point=input$point,
+                      overlay=input$showRings,
+                      penColor=input$penColor,
+                      penLoc = input$penLoc,
+                      zoom=input$zoom)
+    
+  })
+  
 
 # aniSpeed<- reactive({ 
 #   switch(input$speed,
@@ -205,7 +214,7 @@ trochoidPoints <- reactive({
 
 
 output$distPlot <- renderPlot({
-    points<-trochoidPoints()
+    #points<-trochoidPoints()
     #ggplotcTrochoid_B(points,
     #                radius1=input$ring1,
     #                radius2=input$ring2,
@@ -214,13 +223,15 @@ output$distPlot <- renderPlot({
     #                penColor=input$penColor,
     #                zoom=input$zoom)
     
-    ggplotcTrochoid_A(radius1=input$ring1,
-                      radius2=input$ring2,
-                      point=input$point,
-                      overlay=input$showRings,
-                      penColor=input$penColor,
-                      penLoc = input$penLoc,
-                      zoom=input$zoom)
+    # ggplotcTrochoid_A(radius1=input$ring1,
+    #                   radius2=input$ring2,
+    #                   point=input$point,
+    #                   overlay=input$showRings,
+    #                   penColor=input$penColor,
+    #                   penLoc = input$penLoc,
+    #                   zoom=input$zoom)
+    
+    update_plot()
 
   })
 
