@@ -1,22 +1,5 @@
----
-title: "Spirograph"
-output: github_document
----
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 library(gganimate)
-```
-
-## GitHub Documents
-
-This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
-
-## Including Code
-
-You can include R code in the document as follows:
-
-```{r plot}
 # angle in radians
 # draw 2*pi cycles with a point every 1/density radians
 calcCycles=100
@@ -54,7 +37,7 @@ epiTrochoid <-function(r1=100,r2=10,penLoc=10,theta=defaultTheta)  {
   x<- cx - penLoc*cos((r1+r2)/r2*theta)
   cy <-(r1+r2)*sin(theta)
   y<- cy - penLoc*sin((r1+r2)/r2*theta)
-  return(data.frame(x,y,cx,cy))
+  return(data.frame(point=1:defaultPoints,x,y,cx,cy))
 }
 
 hypoTrochoid <-function(r1=100,r2=-10,penLoc=10,theta=defaultTheta)  {
@@ -68,11 +51,11 @@ hypoTrochoid <-function(r1=100,r2=-10,penLoc=10,theta=defaultTheta)  {
   x <- cx + penLoc*cos((r1-r2)/r2*theta)
   cy <-(r1-r2)*sin(theta)
   y <- cy - penLoc*sin((r1-r2)/r2*theta)
-  return(data.frame(x,y,cx,cy))
+  return(data.frame(point=1:defaultPoints,x,y,cx,cy))
 }
 
 ggplotcTrochoid_A<-function(radius1=100,radius2=20,
-                            penLoc=5,point=defaultPoints,
+                            penLoc=5,max_point=defaultPoints,
                             overlay=TRUE,penColor="black",zoom=FALSE) {
   
   
@@ -101,22 +84,21 @@ ggplotcTrochoid_A<-function(radius1=100,radius2=20,
   
   plotRange=c(-maxRange,maxRange)
   
-  t.plot<-ggplot(data=dat[1:point,],aes(x=x,y=y))+geom_path(color=penColor)+xlim(plotRange)+ylim(plotRange)
+  t.plot<-ggplot(data=dat[1:max_point,],aes(x=x,y=y))+geom_path(color=penColor)+xlim(plotRange)+ylim(plotRange)
   #plot rotating ring and 'pen' for last point
+  point <- max_point
   if (overlay) t.plot <- ggoverlayCircles(t.plot,radius1,radius2,
                                           px =dat[point,]$x,
                                           py =dat[point,]$y,
                                           cx =dat[point,]$cx,
                                           cy =dat[point,]$cy,
                                           penColor)
-  # t.plot <- t.plot + transition_time(point) +
-  # ease_aes('linear')
+  # t.plot <- t.plot + transition_manual(point,cumulative = TRUE)
   print(t.plot)
 } 
 
-defaultPoints=pi*100-13
+plot_points=301
 ggplotcTrochoid_A(radius1=100,radius2=-30,
-                  penLoc=20,point=defaultPoints,
+                  penLoc=20,max_point=plot_points,
                   overlay=TRUE,penColor="red",zoom=FALSE)
-```
 
