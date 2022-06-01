@@ -42,7 +42,8 @@ shinyUI(fluidPage(
       checkboxInput("zoom","Zoom? (won't always make a difference)",FALSE),
 
       sliderInput("point","Number of points drawn",min=2,max=points,value=2,step=5,
-                  animate=animationOptions(interval=points/60*2))
+                  animate=animationOptions(interval=points/60*2,
+                                           playButton = tag("h1","Go!")))
       
 #       selectInput("speed", "Animation Speed", c("slow", "medium", "fast")),
 #       
